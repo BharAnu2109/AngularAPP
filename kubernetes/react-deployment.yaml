@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-frontend
+  labels:
+    app: react-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: react-frontend
+  template:
+    metadata:
+      labels:
+        app: react-frontend
+    spec:
+      containers:
+      - name: react-frontend
+        image: gcr.io/YOUR_PROJECT_ID/react-frontend:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-frontend-service
+  labels:
+    app: react-frontend
+spec:
+  type: LoadBalancer
+  selector:
+    app: react-frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
