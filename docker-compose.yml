@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - trading-network
+
+  angular-frontend:
+    build: ./angular-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - trading-network
+
+  react-frontend:
+    build: ./react-frontend
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
+    networks:
+      - trading-network
+
+  vue-frontend:
+    build: ./vue-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - trading-network
+
+networks:
+  trading-network:
+    driver: bridge
