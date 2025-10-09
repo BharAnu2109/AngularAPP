@@ -1,0 +1,73 @@
+<div class="trading-dashboard">
+  <header>
+    <h1>Angular Trading Dashboard</h1>
+    <p>Real-time stock trading platform</p>
+  </header>
+
+  <div class="dashboard-content">
+    <section class="portfolio-section">
+      <h2>Portfolio Overview</h2>
+      <div class="portfolio-info">
+        <div class="info-card">
+          <h3>Cash Balance</h3>
+          <p class="amount">${{ portfolio?.cash | number:'1.2-2' }}</p>
+        </div>
+        <div class="info-card">
+          <h3>Total Value</h3>
+          <p class="amount">${{ portfolio?.totalValue | number:'1.2-2' }}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="stocks-section">
+      <h2>Available Stocks</h2>
+      <div class="stocks-grid">
+        <div class="stock-card" *ngFor="let stock of stocks | keyvalue">
+          <h3>{{ stock.value.name }}</h3>
+          <p class="symbol">{{ stock.key }}</p>
+          <p class="price">${{ stock.value.price | number:'1.2-2' }}</p>
+          <button (click)="openTradeForm(stock.key)">Trade</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="trade-section" *ngIf="selectedStock">
+      <h2>Place Order - {{ selectedStock }}</h2>
+      <form (ngSubmit)="placeOrder()">
+        <div class="form-group">
+          <label>Side:</label>
+          <select [(ngModel)]="orderForm.side" name="side" required>
+            <option value="buy">Buy</option>
+            <option value="sell">Sell</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Quantity:</label>
+          <input type="number" [(ngModel)]="orderForm.quantity" name="quantity" min="1" required>
+        </div>
+        <div class="form-group">
+          <label>Order Type:</label>
+          <select [(ngModel)]="orderForm.orderType" name="orderType" required>
+            <option value="market">Market</option>
+            <option value="limit">Limit</option>
+          </select>
+        </div>
+        <button type="submit">Submit Order</button>
+        <button type="button" (click)="cancelTrade()">Cancel</button>
+      </form>
+    </section>
+
+    <section class="orders-section">
+      <h2>Recent Orders</h2>
+      <div class="orders-list">
+        <div class="order-item" *ngFor="let order of orders">
+          <span>{{ order.symbol }}</span>
+          <span>{{ order.side | uppercase }}</span>
+          <span>{{ order.quantity }} shares</span>
+          <span>${{ order.price | number:'1.2-2' }}</span>
+          <span [class]="'status-' + order.status">{{ order.status }}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

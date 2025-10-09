@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-frontend
+  labels:
+    app: angular-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: angular-frontend
+  template:
+    metadata:
+      labels:
+        app: angular-frontend
+    spec:
+      containers:
+      - name: angular-frontend
+        image: gcr.io/YOUR_PROJECT_ID/angular-frontend:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: angular-frontend-service
+  labels:
+    app: angular-frontend
+spec:
+  type: LoadBalancer
+  selector:
+    app: angular-frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
